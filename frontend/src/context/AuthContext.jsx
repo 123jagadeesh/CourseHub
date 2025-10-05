@@ -1,8 +1,8 @@
+// src/context/AuthContext.js
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import api from "../api/api"; // axios wrapper (optional)
+import api from "../api/api";
 
 const AuthContext = createContext(null);
-
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
@@ -14,39 +14,43 @@ export const AuthProvider = ({ children }) => {
     }
   });
   const [token, setToken] = useState(() => localStorage.getItem("ch_token") || null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // attach token to api instance if present
-    if (token) {
-      api.setAuthToken(token);
-    } else {
-      api.clearAuthToken();
-    }
+    if (token) api.setAuthToken(token);
+    else api.setAuthToken(null);
   }, [token]);
 
-  const login = async (email, password) => {
-    // Replace with real API call:
-    // const res = await api.auth.login({ email, password });
-    // setToken(res.token); setUser(res.user);
-    // For now, dummy:
-    const fake = { id: Date.now().toString(), name: email.split("@")[0], email, role: "student" };
-    setUser(fake);
-    const fakeToken = "dummy-token-" + Date.now();
-    setToken(fakeToken);
-    localStorage.setItem("ch_user", JSON.stringify(fake));
-    localStorage.setItem("ch_token", fakeToken);
-    return fake;
+  const handleAuthSuccess = (data) => {
+    // backend should return { _id, name, email, role, token }
+    const { token: t, ...userData } = data;
+    setToken(t);
+    setUser(userData);
+    localStorage.setItem("ch_token", t);
+    localStorage.setItem("ch_user", JSON.stringify(userData));
+    api.setAuthToken(t);
   };
 
   const register = async (name, email, password, role = "student") => {
-    // Replace with api.auth.register...
-    const fake = { id: Date.now().toString(), name, email, role };
-    setUser(fake);
-    const fakeToken = "dummy-token-" + Date.now();
-    setToken(fakeToken);
-    localStorage.setItem("ch_user", JSON.stringify(fake));
-    localStorage.setItem("ch_token", fakeToken);
-    return fake;
+    setLoading(true);
+    try {
+      const res = await api.auth.register({ name, email, password, role });
+      handleAuthSuccess(res.data);
+      return res.data;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const login = async (email, password) => {
+    setLoading(true);
+    try {
+      const res = await api.auth.login({ email, password });
+      handleAuthSuccess(res.data);
+      return res.data;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const logout = () => {
@@ -54,9 +58,24 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     localStorage.removeItem("ch_user");
     localStorage.removeItem("ch_token");
+    api.setAuthToken(null);
   };
 
-  const value = useMemo(() => ({ user, token, login, register, logout, setUser, setToken }), [user, token]);
+  // Auto logout on 401
+  useEffect(() => {
+    const interceptor = api.instance.interceptors.response.use(
+      (r) => r,
+      (error) => {
+        if (error.isUnauthorized) logout();
+        return Promise.reject(error);
+      }
+    );
+    return () => api.instance.interceptors.response.eject(interceptor);
+  }, []);
+
+  const value = useMemo(() => ({
+    user, token, loading, login, register, logout
+  }), [user, token, loading]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

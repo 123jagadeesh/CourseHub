@@ -1,23 +1,52 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import api from "../api/api";
 
 export default function InstructorDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [myCourses, setMyCourses] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // replace with API call to fetch instructor courses
-  const myCourses = [
-    { id: "c1", title: "MERN Stack" },
-  ];
+  const fetchCourses = async () => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      const res = await api.courses.getAll();
+      // Filter courses to show only those created by the current instructor
+      const filtered = (res.data || []).filter(
+        (course) => course.instructor?._id === user._id
+      );
+      setMyCourses(filtered);
+      setError(null);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to fetch courses");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const addCourse = () => {
-    // form/modal in real UI; here just prompt
-    const title = prompt("Course title");
+  useEffect(() => {
+    fetchCourses();
+  }, [user]);
+
+  const addCourse = async () => {
+    const title = prompt("Course title:");
     if (!title) return;
-    // call api.courses.create(...)
-    // then refresh
-    alert("Course created (dummy). Implement API call to create course.");
+    const description = prompt("Course description:");
+    if (!description) return;
+
+    try {
+      await api.courses.create({ title, description });
+      alert("Course created successfully!");
+      fetchCourses(); // Refresh the list
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to create course");
+      console.error(err);
+    }
   };
 
   return (
@@ -31,12 +60,21 @@ export default function InstructorDashboard() {
         <button className="btn" onClick={addCourse}>Add Course</button>
       </div>
 
+      {loading && <p>Loading your courses...</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      
       <div className="grid">
-        {myCourses.map(c => (
-          <div key={c.id} className="course-card">
+        {!loading && !error && myCourses.length === 0 && (
+          <p>You haven't created any courses yet. Click "Add Course" to begin.</p>
+        )}
+        {myCourses.map((c) => (
+          <div key={c._id} className="course-card">
             <h3>{c.title}</h3>
+            <p className="desc">{c.description}</p>
             <div className="actions">
-              <button className="btn" onClick={() => navigate(`/instructor/courses/${c.id}`)}>Manage</button>
+              <button className="btn" onClick={() => navigate(`/instructor/courses/${c._id}`)}>
+                Manage
+              </button>
             </div>
           </div>
         ))}
