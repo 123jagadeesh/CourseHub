@@ -1,4 +1,3 @@
-// src/utils/quizGrader.js
 export const gradeQuiz = ({ lecture, answers = [], passPercent = 70 }) => {
   if (!lecture) throw new Error("Lecture is required");
   if (lecture.type !== "quiz") throw new Error("Lecture is not a quiz");

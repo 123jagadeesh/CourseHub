@@ -21,6 +21,10 @@ const courseSchema = new mongoose.Schema(
         ref: "Lecture",
       },
     ],
+    enrolledStudents: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    }],
   },
   { timestamps: true }
 );

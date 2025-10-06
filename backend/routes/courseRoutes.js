@@ -3,17 +3,30 @@ import {
   createCourse,
   getAllCourses,
   getCourseById,
+  enrollStudent,
+  getEnrolledCourses,
+  getNotEnrolledCourses
 } from "../controllers/courseController.js";
-import { protect, instructorOnly } from "../middleware/authMiddleware.js";
+import { protect,studentOnly, instructorOnly } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 router.route("/")
   .get(getAllCourses)
   .post(protect, instructorOnly, createCourse);
+  
+
+router.route("/enrolled")
+  .get(protect, studentOnly, getEnrolledCourses);
+
+router.route("/not-enrolled")
+  .get(protect, studentOnly, getNotEnrolledCourses);
 
 router.route("/:id")
   .get(getCourseById);
+
+router.route("/:courseId/enroll")
+  .post(protect, enrollStudent);
 
 import lectureRoutes from "./lectureRoutes.js";
 router.use("/:courseId/lectures", lectureRoutes);

@@ -27,15 +27,14 @@ import courseRoutes from "./routes/courseRoutes.js";
 app.use("/api/courses", courseRoutes);
 
 import lectureRoutes from "./routes/lectureRoutes.js";
-import lectureActionRoutes from "./routes/lectureActionRoutes.js";
-app.use("/api/courses", lectureRoutes);          // nested: /api/courses/:courseId/lectures...
-app.use("/api/lectures", lectureActionRoutes); 
+
+app.use("/api/courses", lectureRoutes);          
+app.use("/api/lectures", progressRoutes); 
 
 import progressRoutes from "./routes/progressRoutes.js";
 app.use("/api/progress", progressRoutes);
 
 
 
-// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(` Server running on port ${PORT}`));

@@ -1,62 +1,36 @@
-// src/controllers/progressController.js
 import Progress from "../models/Progress.js";
 import Course from "../models/Course.js";
 import Lecture from "../models/Lecture.js";
 import mongoose from "mongoose";
 import { gradeQuiz } from "../utils/quizGrader.js";
 
-/**
- * POST /api/progress/enroll/:courseId
- */
-export const enrollCourse = async (req, res) => {
-  const { courseId } = req.params;
-  const studentId = req.user._id;
 
-  try {
-    const course = await Course.findById(courseId);
-    if (!course) return res.status(404).json({ message: "Course not found" });
 
-    // ensure unique enrollment
-    const existing = await Progress.findOne({ student: studentId, course: courseId });
-    if (existing) return res.status(400).json({ message: "Already enrolled" });
-
-    const progress = await Progress.create({
-      student: studentId,
-      course: courseId,
-      completedLectures: [],
-      quizAttempts: []
-    });
-
-    res.status(201).json(progress);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-/**
- * POST /api/progress/complete/:lectureId
- * For marking reading lectures as complete (explicit action from frontend)
- */
 export const completeReadingLecture = async (req, res) => {
   const { lectureId } = req.params;
   const studentId = req.user._id;
 
   try {
-    const lecture = await Lecture.findById(lectureId);
+    const lecture = await Lecture.findById(lectureId).populate('course'); 
     if (!lecture) return res.status(404).json({ message: "Lecture not found" });
     if (lecture.type !== "reading") return res.status(400).json({ message: "Not a reading lecture" });
 
-    const progress = await Progress.findOne({ student: studentId, course: lecture.course });
-    if (!progress) return res.status(400).json({ message: "Not enrolled in this course" });
+    
+    if (!lecture.course.enrolledStudents.includes(studentId)) {
+      return res.status(400).json({ message: "Not enrolled in this course" });
+    }
 
-    // We should ensure gating: the previous lectures must be completed
-    const priorLectures = await Lecture.find({ course: lecture.course, order: { $lt: lecture.order } }).select("_id");
+    const progress = await Progress.findOne({ student: studentId, course: lecture.course._id });
+    if (!progress) return res.status(400).json({ message: "Progress record not found for this enrollment." });
+
+    
+    const priorLectures = await Lecture.find({ course: lecture.course._id, order: { $lt: lecture.order } }).select("_id");
     const priorIds = priorLectures.map(l => String(l._id));
     const completedSet = new Set(progress.completedLectures.map(id => String(id)));
     const notDone = priorIds.find(id => !completedSet.has(id));
     if (notDone) return res.status(403).json({ message: "Complete earlier lectures first" });
 
-    // add lecture id if not already present
+    
     if (!completedSet.has(String(lecture._id))) {
       progress.completedLectures.push(lecture._id);
       await progress.save();
@@ -68,10 +42,7 @@ export const completeReadingLecture = async (req, res) => {
   }
 };
 
-/**
- * POST /api/lectures/:lectureId/attempt
- * Student submits quiz answers; grade server-side; record attempt; mark complete on pass
- */
+
 export const submitQuizAttempt = async (req, res) => {
   const { lectureId } = req.params;
   const { answers } = req.body;
@@ -97,7 +68,7 @@ export const submitQuizAttempt = async (req, res) => {
       return res.status(400).json({ message: "Not enrolled in this course" });
     }
 
-    // Ensure gating: previous lectures must be completed
+    
     const priorLectures = await Lecture.find({ course: lecture.course, order: { $lt: lecture.order } }).select("_id").session(session);
     const priorIds = priorLectures.map(l => String(l._id));
     const completedSet = new Set(progress.completedLectures.map(id => String(id)));
@@ -107,10 +78,10 @@ export const submitQuizAttempt = async (req, res) => {
       return res.status(403).json({ message: "Complete earlier lectures first" });
     }
 
-    // grade
+    
     const { scorePercent, passed, correctCount, total } = gradeQuiz({ lecture, answers });
 
-    // record attempt
+    
     progress.quizAttempts.push({
       lecture: lecture._id,
       answers,
@@ -119,13 +90,13 @@ export const submitQuizAttempt = async (req, res) => {
       attemptedAt: new Date()
     });
 
-    // mark completed if passed and not already done
+    
     if (passed && !progress.completedLectures.some(id => String(id) === String(lecture._id))) {
       progress.completedLectures.push(lecture._id);
     }
 
-    // Optionally update aggregate score (example: average of passed quiz scores)
-    // Here we update a simple average of attempts' scores (optional)
+    
+    
     const allScores = progress.quizAttempts.map(a => a.score || 0);
     progress.score = allScores.length ? (allScores.reduce((s, v) => s + v, 0) / allScores.length) : 0;
 
@@ -147,10 +118,7 @@ export const submitQuizAttempt = async (req, res) => {
   }
 };
 
-/**
- * GET /api/progress/:courseId
- * return progress summary: totalLectures, completedCount, percent, nextLectureId
- */
+
 export const getProgressSummary = async (req, res) => {
   const { courseId } = req.params;
   const studentId = req.user._id;

@@ -1,4 +1,3 @@
-// src/utils/sanitizeLecture.js
 export const sanitizeLectureForStudent = (lecture) => {
   if (!lecture) return lecture;
   const l = lecture.toObject ? lecture.toObject() : JSON.parse(JSON.stringify(lecture));
@@ -7,7 +6,7 @@ export const sanitizeLectureForStudent = (lecture) => {
       _id: q._id,
       questionText: q.questionText,
       options: q.options
-      // intentionally omit correctAnswer
+      
     }));
   }
   return l;
