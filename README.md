@@ -12,7 +12,7 @@ To set up and run CourseHub locally, please follow these steps:
 
 ### 1. Clone the Repository
 ```bash
-git clone <your-repository-url>
+git clone "https://github.com/123jagadeesh/CourseHub.git"
 cd CourseHub
 ```
 
@@ -96,3 +96,4 @@ CourseHub follows a classic **Client-Server architecture** with a clear separati
 -   **React.js**: Chosen for its component-based architecture, which promotes reusability and makes it efficient for building complex and interactive UIs. Its vibrant ecosystem and strong community support also contribute to faster development.
 -   **Node.js & Express.js**: Selected for their JavaScript-centric environment, allowing for a single language across the entire stack (full-stack JavaScript development). Express.js provides a minimalistic and flexible framework for building scalable APIs.
 -   **MongoDB**: Opted for its flexibility and scalability as a NoSQL database. It's particularly well-suited for applications with evolving data structures and can handle large volumes of data efficiently. Its JSON-like document structure aligns well with JavaScript, simplifying data handling between frontend and backend.
+
