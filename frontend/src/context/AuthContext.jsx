@@ -1,4 +1,3 @@
-// src/context/AuthContext.js
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import api from "../api/api";
 
@@ -22,7 +21,7 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const handleAuthSuccess = (data) => {
-    // backend should return { _id, name, email, role, token }
+    
     const { token: t, ...userData } = data;
     setToken(t);
     setUser(userData);
@@ -61,7 +60,7 @@ export const AuthProvider = ({ children }) => {
     api.setAuthToken(null);
   };
 
-  // Auto logout on 401
+  
   useEffect(() => {
     const interceptor = api.instance.interceptors.response.use(
       (r) => r,

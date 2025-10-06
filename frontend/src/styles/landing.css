@@ -1,0 +1,92 @@
+.landing-hero {
+  padding: 24px;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.landing-hero-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.landing-hero-title {
+  margin: 0;
+}
+
+.landing-hero-description {
+  margin: 0;
+  color: #666;
+}
+
+.landing-hero-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.landing-hero-button {
+  margin-right: 8px;
+}
+
+.role-selector-container {
+  min-width: 260px;
+}
+
+.role-selector-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.role-selector-buttons .btn {
+  flex: 1;
+}
+
+.role-description {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.role-text {
+  font-size: 13px;
+  color: #666;
+}
+
+.project-overview-section {
+  margin-top: 18px;
+}
+
+.project-overview-content {
+  background: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  color: #333;
+}
+
+.project-overview-content ul {
+  list-style: disc;
+  margin-left: 20px;
+  padding: 0;
+}
+
+.project-overview-text {
+  color: #666;
+  font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  .landing-hero-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .landing-hero-actions {
+    width: 100%;
+    justify-content: center;
+  }
+}

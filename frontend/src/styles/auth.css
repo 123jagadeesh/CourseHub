@@ -1,0 +1,75 @@
+.auth-form-container {
+  max-width: 520px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.auth-form-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.auth-form-tabs .btn {
+  flex: 1;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-form .input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  width: 100%;
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.auth-form-role-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.auth-form-role-select label {
+  font-size: 13px;
+}
+
+.auth-form-role-select select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.auth-form-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.auth-form-actions .btn {
+  flex: 1;
+}
+
+@media (max-width: 600px) {
+  .auth-form-container {
+    padding: 15px;
+    margin: 0 15px; /* Add some margin on smaller screens */
+  }
+
+  .auth-form-actions {
+    flex-direction: column;
+  }
+
+  .auth-form-role-select {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}

@@ -1,4 +1,3 @@
-// Simple axios wrapper. Use this to integrate backend later.
 import axios from "axios";
 
 const instance = axios.create({
@@ -22,8 +21,11 @@ const auth = {
 
 const courses = {
   getAll: () => instance.get("/api/courses"),
-  getById: (id) => instance.get(`/api/courses/${id}`),
+  get: (id) => instance.get(`/api/courses/${id}`), 
   create: (payload) => instance.post("/api/courses", payload),
+  enroll: (courseId) => instance.post(`/api/courses/${courseId}/enroll`), 
+  getEnrolledCourses: () => instance.get(`/api/courses/enrolled`),
+  getNotEnrolledCourses: () => instance.get(`/api/courses/not-enrolled`),
 };
 
 const lectures = {
@@ -34,9 +36,9 @@ const lectures = {
 };
 
 const progress = {
-  enroll: (courseId) => instance.post(`/api/progress/enroll/${courseId}`),
+  
   complete: (lectureId) => instance.post(`/api/progress/complete/${lectureId}`),
-  get: (courseId) => instance.get(`/api/progress/${courseId}`),
+  get: (courseId) => instance.get(`/api/progress/${courseId}`), 
 };
 
 export default {

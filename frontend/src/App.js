@@ -1,4 +1,3 @@
-// src/App.js
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
@@ -29,7 +28,7 @@ function App() {
         <Route path="/courses/:courseId" element={<CourseDetail />} />
         <Route path="/courses/:courseId/lectures/:lectureId" element={<LectureView />} />
 
-        {/* Student public courses listing */}
+        
         <Route
           path="/student/dashboard"
           element={
@@ -39,7 +38,7 @@ function App() {
           }
         />
 
-        {/* Student enrolled courses (My Learnings) */}
+        
         <Route
           path="/student/mylearnings"
           element={
@@ -49,7 +48,7 @@ function App() {
           }
         />
 
-        {/* Instructor */}
+        
         <Route
           path="/instructor"
           element={

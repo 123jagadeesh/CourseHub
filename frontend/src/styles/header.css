@@ -1,0 +1,138 @@
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  z-index: 50;
+}
+
+.header-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+}
+
+.header-left-section {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.brand-logo {
+  font-weight: 700;
+  font-size: 18px;
+  color: #111;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.nav-link {
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: #f0f0f0;
+}
+
+.btn-home {
+  background: none;
+  color: #333;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-home:hover {
+  background-color: #f0f0f0;
+}
+
+.header-right-section {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.header-search-input {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  width: 200px;
+}
+
+.auth-buttons-group,
+.user-info-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.user-info {
+  font-size: 14px;
+  color: #333;
+}
+
+.btn-logout {
+  background: #1976d2; /* Blue color for logout button */
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    height: auto;
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .header-left-section {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+    gap: 5px;
+  }
+
+  .nav-link {
+    width: 100%;
+    text-align: center;
+    padding: 10px 8px;
+  }
+
+  .header-right-section {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .header-right-section .btn {
+    width: 100%;
+  }
+}
