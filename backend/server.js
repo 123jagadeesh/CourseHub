@@ -28,8 +28,8 @@ app.use("/api/courses", courseRoutes);
 
 import lectureRoutes from "./routes/lectureRoutes.js";
 
-app.use("/api/courses", lectureRoutes);          
-app.use("/api/lectures", progressRoutes); 
+          
+app.use("/api/lectures", lectureRoutes); 
 
 import progressRoutes from "./routes/progressRoutes.js";
 app.use("/api/progress", progressRoutes);

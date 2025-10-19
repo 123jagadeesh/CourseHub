@@ -5,7 +5,8 @@ import {
   getCourseById,
   enrollStudent,
   getEnrolledCourses,
-  getNotEnrolledCourses
+  getNotEnrolledCourses,
+  deleteCourse
 } from "../controllers/courseController.js";
 import { protect,studentOnly, instructorOnly } from "../middleware/authMiddleware.js";
 
@@ -23,7 +24,8 @@ router.route("/not-enrolled")
   .get(protect, studentOnly, getNotEnrolledCourses);
 
 router.route("/:id")
-  .get(getCourseById);
+  .get(getCourseById)
+  .delete(protect, instructorOnly, deleteCourse);
 
 router.route("/:courseId/enroll")
   .post(protect, enrollStudent);
