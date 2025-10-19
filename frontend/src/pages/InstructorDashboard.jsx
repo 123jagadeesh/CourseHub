@@ -71,6 +71,7 @@ export default function InstructorDashboard() {
         myCourses={myCourses}
         loading={loading}
         error={error}
+        setMyCourses={setMyCourses}
       />
     </div>
   );

@@ -13,13 +13,9 @@ export default function StudentDashboard() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [progressMap, setProgressMap] = useState({});
   const [enrolling, setEnrolling] = useState({});
 
-  useEffect(() => {
-    
-    setProgressMap({});
-  }, [user]);
+ 
 
   useEffect(() => {
     let mounted = true;
@@ -41,12 +37,6 @@ export default function StudentDashboard() {
   }, []);
 
   
-  useEffect(() => {
-    
-    
-    setProgressMap({});
-  }, [courses, user]);
-
   const handleEnroll = async (courseId) => {
     if (!user) return navigate("/auth?role=student");
     
@@ -72,7 +62,7 @@ export default function StudentDashboard() {
       <Header
         query={query}
         setQuery={setQuery}
-        showSearchBar={true}
+        showSearchBar={false}
       />
 
       <CoursesGrid

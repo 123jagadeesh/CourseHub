@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000",
+  baseURL: process.env.BACKEND_URL || "http://localhost:5000",
   headers: { "Content-Type": "application/json" },
 });
 
@@ -26,17 +26,18 @@ const courses = {
   enroll: (courseId) => instance.post(`/api/courses/${courseId}/enroll`), 
   getEnrolledCourses: () => instance.get(`/api/courses/enrolled`),
   getNotEnrolledCourses: () => instance.get(`/api/courses/not-enrolled`),
+  delete: (id) => instance.delete(`/api/courses/${id}`),
 };
 
 const lectures = {
   list: (courseId) => instance.get(`/api/courses/${courseId}/lectures`),
   get: (courseId, lectureId) => instance.get(`/api/courses/${courseId}/lectures/${lectureId}`),
   add: (courseId, payload) => instance.post(`/api/courses/${courseId}/lectures`, payload),
-  attempt: (lectureId, payload) => instance.post(`/api/lectures/${lectureId}/attempt`, payload),
+  
 };
 
 const progress = {
-  
+   attempt: (lectureId, payload) => instance.post(`/api/progress/${lectureId}/attempt`, payload),
   complete: (lectureId) => instance.post(`/api/progress/complete/${lectureId}`),
   get: (courseId) => instance.get(`/api/progress/${courseId}`), 
 };

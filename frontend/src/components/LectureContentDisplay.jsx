@@ -56,7 +56,7 @@ export default function LectureContentDisplay({
         await handleEnrollInline();
       }
 
-      const res = await api.lectures.attempt(lectureId, { answers: ansArr });
+      const res = await api.progress.attempt(lectureId, { answers: ansArr });
       setQuizResult(res.data);
       fetchProgress(); 
     } catch (err) {
