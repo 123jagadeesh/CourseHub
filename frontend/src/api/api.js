@@ -1,7 +1,6 @@
 import axios from "axios";
 
-// Debug: Log the environment variable
-console.log("REACT_APP_BACKEND_URL:", process.env.REACT_APP_BACKEND_URL);
+
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
